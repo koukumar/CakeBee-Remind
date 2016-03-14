@@ -11,8 +11,49 @@ var secret = process.env.SECRET_KEY;
 var client = loggly.createClient({
     token: loggly_token,
     subdomain: loggly_sub_domain,
-    tags: ["CakeBee", "Reminder"],
+    tags: ["CakeBee", "Reminder", "Users"],
     json:true
+});
+
+
+var Firebase = require("firebase");
+var firebase_ref = new Firebase(process.env.FIREBASE_URL);
+var firebase_secret = process.env.FIREBASE_SECRET;
+
+firebase_ref.authWithCustomToken(firebase_secret, function(error, authData) {
+    if (error) {
+        console.log("Login Failed!", error);
+    } else {
+        console.log("Firebase authenticated successfully with payload.");
+    }
+});
+
+router.get('/forgotkey/:email', function(req, res) {
+    if (req.headers['secret'] != secret) {
+        res.status(400).send("Bad credentials");
+        return;
+    }
+
+    var email = req.params.email;
+    firebase_ref.child('/teams/')
+        .once("value", function(snapshot) {
+            if (snapshot.val() == null || snapshot.val() == undefined) {
+                res.status(200).send("All ok 1");
+                return;
+            }
+            //console.log(snapshot.val());
+            var teams = snapshot.val();
+            for (var teamKey in teams) {
+                var team = teams[teamKey];
+                var adminEmail = team['email'];
+                if (email == adminEmail) {
+                    mail.resendTeamKey(teamKey, email);
+                    client.log({"teamKey" : teamKey, "email" : email}, ["forgotkey"])
+                }
+            }
+        });
+    res.status(200).send("Resent team key");
+
 });
 
 router.get('/:account/:email', function(req, res) {

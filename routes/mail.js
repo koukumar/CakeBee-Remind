@@ -2,9 +2,10 @@ var express = require('express');
 var router = express.Router();
 
 var sendgrid  = require('sendgrid')(process.env.SENDGRID_KEY);
-var fromMailId = "remind@cakebee.in";
+var fromMailId = "customerdelight@cakebee.in";
 var fromName = "CakeBee Remind";
-var website = "www.cakebee.in"
+var website = "www.cakebee.in";
+var remindWebsite = "www.yabr.co";
 
 module.exports = {
     notifyMemberBirthday : function(adminMail, memberName) {
@@ -46,6 +47,21 @@ module.exports = {
             fromname : fromName,
             subject : 'New user registration!!!',
             text    : 'New user registered with account - ' + account + ", email -  " + email + "."
+        };
+
+        sendgrid.send(payload, function(err, json) {
+            if (err) { console.error(err); }
+            console.log(json);
+        });
+    },
+
+    resendTeamKey : function(account, email) {
+        var payload   = {
+            to      : email,
+            from    : fromMailId,
+            fromname : fromName,
+            subject : 'Link to your CakeBee-Remind team page',
+            text    : 'You can access your teams page here - ' + remindWebsite +'/#/team/' + account
         };
 
         sendgrid.send(payload, function(err, json) {
