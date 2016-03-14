@@ -56,7 +56,7 @@ module.exports = {
             subject : 'Great! You chose to celebrate with CakeBee Remind!',
             text    : 'Hello!\n\n' +
                 'Thanks for signing up with CakeBee Remind, a birthday reminder exclusively for ' +
-                'teams at work. Share your team page link with your team and have them add birthdays. ' +
+                'teams at work. Share the team page link with your team to add birthdays. ' +
                 'That’s it, now we’ll make sure you don’t miss to celebrate :)\n\n' +
                 'Any help, shoot an email to customerdelight@cakebee.in, we’ll be glad to help!\n\n' +
                 'Your team page: ' + this.getTeamPage(account) + '\n\n' +
