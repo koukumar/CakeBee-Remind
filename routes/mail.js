@@ -49,7 +49,7 @@ module.exports = {
     newUserNotification : function(account, email) {
         var payload   = {
             to      : email,
-            cc      : ['abishek@logbase.io'],
+            bcc      : ['abishek@logbase.io'],
             from    : fromMailId,
             fromname : fromName,
             subject : 'Great! You chose to celebrate with CakeBee Remind!',
@@ -99,8 +99,9 @@ module.exports = {
             fromname : fromName,
             subject : 'Your CakeBee Remind Team Page',
             text    : 'Hello!\n\n'+'' +
-                'No CakeBee Remind team page available for the given mail id.\n\n' +
-                'Email: ' + email + '\n\n' +
+                'We got a forgot team page key request from you. However, ' +
+                'we are unable to find any team page mapped to your email, ' + email +
+                '. Looks like you might have used a different email.\n\n' +
                 'Love,\n\n' +
                 'CakeBee Remind.'
         };
