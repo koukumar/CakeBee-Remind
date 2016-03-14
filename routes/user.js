@@ -54,10 +54,10 @@ router.get('/forgotkey/:email', function(req, res) {
                     mailSent = true;
                 }
             }
+            if (!mailSent) {
+                mail.teamKeyUnavailable(email);
+            }
         });
-    if (!mailSent) {
-        mail.teamKeyUnavailable(email);
-    }
     res.status(200).send("Resent team key");
 
 });
