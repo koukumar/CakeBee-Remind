@@ -35,6 +35,7 @@ router.get('/forgotkey/:email', function(req, res) {
     }
 
     var email = req.params.email;
+    var mailSent = false;
     firebase_ref.child('/teams/')
         .once("value", function(snapshot) {
             if (snapshot.val() == null || snapshot.val() == undefined) {
@@ -46,12 +47,17 @@ router.get('/forgotkey/:email', function(req, res) {
             for (var teamKey in teams) {
                 var team = teams[teamKey];
                 var adminEmail = team['email'];
+                var teamName = team['team'];
                 if (email == adminEmail) {
-                    mail.resendTeamKey(teamKey, email);
+                    mail.resendTeamKey(teamKey, email, teamName);
                     client.log({"teamKey" : teamKey, "email" : email}, ["forgotkey"])
+                    mailSent = true;
                 }
             }
         });
+    if (!mailSent) {
+        mail.teamKeyUnavailable(email);
+    }
     res.status(200).send("Resent team key");
 
 });

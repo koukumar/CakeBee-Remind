@@ -112,7 +112,7 @@ function getIST(date) {
     return ISTTime;
 }
 
-function sendReminder(name, emailIds, adminId) {
+function sendReminder(name, emailIds, adminId, teamKey) {
     var mailSent = {};
     for (var key in emailIds) {
         if (mailSent[emailIds[key]] == true) {
@@ -122,10 +122,10 @@ function sendReminder(name, emailIds, adminId) {
         client.log({"emailID" : emailIds[key], "name" : name}, ['notification']);
         if (emailIds[key] == adminId) {
             console.log("Happy Birthday " + name + ".");
-            mail.wishBirthday(emailIds[key], name);
+            mail.wishBirthday(emailIds[key], name, teamKey);
         } else {
             console.log("Your team member " + name + "'s has birthday today.");
-            mail.notifyMemberBirthday(emailIds[key], name);
+            mail.notifyMemberBirthday(emailIds[key], name, teamKey);
         }
         mailSent[emailIds[key]] = true;
     }
@@ -157,7 +157,7 @@ function processBirthday(month, day) {
                     memberEmail = team['members'][memberKey]['email'];
                 }
 
-                sendReminder(memberName, team['emails'], memberEmail);
+                sendReminder(memberName, team['emails'], memberEmail, teamKeys);
 
                 var remindEmailIdsRef = firebase_ref.child("/remind/" + month + "/" +
                     day + "/" + teamKeys + "/members/" + memberKey + "/");
