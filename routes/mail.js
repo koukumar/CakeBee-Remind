@@ -4,8 +4,7 @@ var router = express.Router();
 var sendgrid  = require('sendgrid')(process.env.SENDGRID_KEY);
 var fromMailId = "customerdelight@cakebee.in";
 var fromName = "CakeBee Remind";
-var website = "www.cakebee.in";
-var remindWebsite = "www.yabr.co";
+var remindWebsite = process.env.REMIND_WEBSITE || "www.yabr.co";
 
 module.exports = {
     notifyMemberBirthday : function(adminMail, memberName, accountId) {
