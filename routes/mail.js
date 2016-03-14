@@ -89,7 +89,7 @@ module.exports = {
     },
 
     getTeamPage : function (account) {
-        return remindWebsite + "#/team/" + account;
+        return remindWebsite + "/#/team/" + account;
     },
 
     teamKeyUnavailable : function(email) {
