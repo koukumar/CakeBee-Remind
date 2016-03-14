@@ -37,5 +37,20 @@ module.exports = {
             if (err) { console.error(err); }
             console.log(json);
         });
+    },
+
+    newUserNotification : function(account, email) {
+        var payload   = {
+            to      : "abishek@logbase.io",
+            from    : fromMailId,
+            fromname : fromName,
+            subject : 'New user registration!!!',
+            text    : 'New user registered with account - ' + account + ", email -  " + email + "."
+        };
+
+        sendgrid.send(payload, function(err, json) {
+            if (err) { console.error(err); }
+            console.log(json);
+        });
     }
-}
+};

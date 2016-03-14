@@ -27,7 +27,7 @@ var client = loggly.createClient({
 });
 
 /* GET users listing. */
-router.get('/update', function(req, res, next) {
+router.get('/update', function(req, res) {
     console.log("Got update request");
     firebase_ref.child('/teams/')
         .once("value", function(snapshot) {
