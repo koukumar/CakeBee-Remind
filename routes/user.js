@@ -39,7 +39,8 @@ router.get('/forgotkey/:email', function(req, res) {
     firebase_ref.child('/teams/')
         .once("value", function(snapshot) {
             if (snapshot.val() == null || snapshot.val() == undefined) {
-                res.status(200).send("All ok 1");
+                res.status(200).send();
+                mail.teamKeyUnavailable(email);
                 return;
             }
             //console.log(snapshot.val());
