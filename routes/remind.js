@@ -118,6 +118,8 @@ function sendReminder(name, emailIds, adminId) {
         if (mailSent[emailIds[key]] == true) {
             continue;
         }
+
+        client.log({"emailID" : emailIds[key], "name" : name}, ['notification']);
         if (emailIds[key] == adminId) {
             console.log("Happy Birthday " + name + ".");
             mail.wishBirthday(emailIds[key], name);
