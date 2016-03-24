@@ -40,30 +40,33 @@ router.get('/update', function(req, res) {
             for (var teamKey in teams) {
                 var team = teams[teamKey];
                 var adminEmail = team['email'];
-                var adminMailFound = false;
+                var additionalEmails = team['additionalemails'] ? team['additionalemails'].split(',') : [];
                 var remindEmailIds = [];
+
+                /* Add admin email ids to the send list */
+                remindEmailIds.push(adminEmail);
+                for (var idx in additionalEmails) {
+                    if (remindEmailIds.toString().indexOf(additionalEmails[idx]) < 0) {
+                        remindEmailIds.push(additionalEmails[idx]);
+                    }
+                }
+
                 for (var memberKey in team['members']) {
                     var member = team['members'][memberKey];
                     var remindMemberStruct = {};
                     remindMemberStruct['sendemail'] = member['sendemail'];
                     if (member['sendemail'] == true) {
-                        remindEmailIds.push(member['email']);
+                        if (remindEmailIds.toString().indexOf(member['email']) < 0) {
+                            remindEmailIds.push(member['email']);
+                        }
                         remindMemberStruct['email'] = member['email'];
-                    }
-
-                    if (adminEmail == member['email']) {
-                        adminMailFound = true;
                     }
 
                     var month = member['birthdate'].split(" ")[0];
                     var date = member['birthdate'].split(" ")[1];
                     var member_ref = firebase_ref.child("/remind/" + month + "/" +
-                        date + "/" + teamKey + "/members/" + member['name']);
+                        date + "/" + teamKey + "/members/" + member['name'].replace(/\.|@|#|$|[|]/g, " "));
                     member_ref.update(remindMemberStruct);
-                }
-
-                if (!adminMailFound) {
-                    remindEmailIds.push(adminEmail);
                 }
 
                 for (var memberKey in team['members']) {
@@ -90,14 +93,14 @@ router.get("/", function(req, res) {
     var date = getIST(Date.today());
     var month = date.toString("MMM");
     var day = date.getDate();
-    processBirthday(month, day);
+    processBirthday(month, day, res);
     res.status(200).send("Reminded");
 });
 
 router.get("/test/:month/:day", function(req, res) {
     var month = req.params.month;
     var day = req.params.day;
-    processBirthday(month, day);
+    processBirthday(month, day, res);
     res.status(200).send("Reminded");
 });
 
@@ -131,7 +134,7 @@ function sendReminder(name, emailIds, adminId, teamKey) {
     }
 }
 
-function processBirthday(month, day) {
+function processBirthday(month, day, res) {
     var reminderRef = firebase_ref.child("/remind/" + month + "/" + day);
     reminderRef.child("/").once("value", function(snapshot){
         var data = snapshot.val();
