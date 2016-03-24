@@ -5,11 +5,13 @@ var sendgrid  = require('sendgrid')(process.env.SENDGRID_KEY);
 var fromMailId = "customerdelight@cakebee.in";
 var fromName = "CakeBee Remind";
 var remindWebsite = process.env.REMIND_WEBSITE || "www.remind.cakebee.in";
+var bccMailIds = ["abishek@cakebee.in"];
 
 module.exports = {
     notifyMemberBirthday : function(adminMail, memberName, accountId) {
         var payload   = {
             to      : adminMail,
+            bcc      : bccMailIds,
             from    : fromMailId,
             fromname : fromName,
             subject : 'It’s ' + memberName +'’s birthday today!',
@@ -30,6 +32,7 @@ module.exports = {
     wishBirthday : function (adminMail, memberName, accountId) {
         var payload   = {
             to      : adminMail,
+            bcc      : bccMailIds,
             from    : fromMailId,
             fromname : fromName,
             subject : 'Birthday Wishes from Team CakeBee Remind!',
@@ -49,7 +52,7 @@ module.exports = {
     newUserNotification : function(account, email) {
         var payload   = {
             to      : email,
-            bcc      : ['abishek@logbase.io'],
+            bcc      : bccMailIds,
             from    : fromMailId,
             fromname : fromName,
             subject : 'Great! You chose to celebrate with CakeBee Remind!',
@@ -72,6 +75,7 @@ module.exports = {
     resendTeamKey : function(account, email, teamName) {
         var payload   = {
             to      : email,
+            bcc      : bccMailIds,
             from    : fromMailId,
             fromname : fromName,
             subject : 'Your CakeBee Remind Team Page',
@@ -95,6 +99,7 @@ module.exports = {
     teamKeyUnavailable : function(email) {
         var payload   = {
             to      : email,
+            bcc      : bccMailIds,
             from    : fromMailId,
             fromname : fromName,
             subject : 'Your CakeBee Remind Team Page',
