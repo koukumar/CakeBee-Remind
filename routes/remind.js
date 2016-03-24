@@ -42,6 +42,7 @@ router.get('/update', function(req, res) {
                 var adminEmail = team['email'];
                 var additionalEmails = team['additionalemails'] ? team['additionalemails'].split(',') : [];
                 var remindEmailIds = [];
+                var zipcode = team['zipcode'];
 
                 /* Add admin email ids to the send list */
                 remindEmailIds.push(adminEmail);
@@ -82,6 +83,11 @@ router.get('/update', function(req, res) {
                     var remindEmailIdsRef = firebase_ref.child("/remind/" + month + "/" +
                         date + "/" + teamKey + "/emails");
                     remindEmailIdsRef.update(remindEmailIdsStruct);
+
+                    var zipRef = firebase_ref.child("/remind/" + month + "/" +
+                        date + "/" + teamKey + "/zip");
+                    zipRef.update({ zipcode: zipcode });
+
                 }
             }
 
@@ -115,7 +121,7 @@ function getIST(date) {
     return ISTTime;
 }
 
-function sendReminder(name, emailIds, adminId, teamKey) {
+function sendReminder(name, emailIds, adminId, teamKey, zipcode) {
     var mailSent = {};
     for (var key in emailIds) {
         if (mailSent[emailIds[key]] == true) {
@@ -128,7 +134,7 @@ function sendReminder(name, emailIds, adminId, teamKey) {
             mail.wishBirthday(emailIds[key], name, teamKey);
         } else {
             console.log("Your team member " + name + "'s has birthday today.");
-            mail.notifyMemberBirthday(emailIds[key], name, teamKey);
+            mail.notifyMemberBirthday(emailIds[key], name, teamKey, zipcode);
         }
         mailSent[emailIds[key]] = true;
     }
@@ -160,7 +166,7 @@ function processBirthday(month, day, res) {
                     memberEmail = team['members'][memberKey]['email'];
                 }
 
-                sendReminder(memberName, team['emails'], memberEmail, teamKeys);
+                sendReminder(memberName, team['emails'], memberEmail, teamKeys, team['zip']['zipcode']);
 
                 var remindEmailIdsRef = firebase_ref.child("/remind/" + month + "/" +
                     day + "/" + teamKeys + "/members/" + memberKey + "/");

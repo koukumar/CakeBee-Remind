@@ -8,7 +8,13 @@ var remindWebsite = process.env.REMIND_WEBSITE || "www.remind.cakebee.in";
 var bccMailIds = ["abishek@cakebee.in"];
 
 module.exports = {
-    notifyMemberBirthday : function(adminMail, memberName, accountId) {
+    notifyMemberBirthday : function(adminMail, memberName, accountId, zip) {
+
+        var cbeMessage = "";
+        if (zip.toString().indexOf("641") == 0) {
+            cbeMessage += 'Celebrate with a cake from www.cakebee.in :) \n\n';
+        }
+
         var payload   = {
             to      : adminMail,
             bcc      : bccMailIds,
@@ -17,7 +23,7 @@ module.exports = {
             subject : 'It’s ' + memberName +'’s birthday today!',
             text    :  'Hello!!!\n\n' +
                 'Today is ' + memberName + '’s birthday, don’t forget to wish!\n\n' +
-                'Celebrate with a cake from www.cakebee.in :) \n\n' +
+                cbeMessage +
                 'Your team page: ' + this.getTeamPage(accountId) + '\n\n' +
                 'Love,\n\n' +
                 'CakeBee Remind.'
