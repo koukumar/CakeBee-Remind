@@ -5,10 +5,10 @@ var sendgrid  = require('sendgrid')(process.env.SENDGRID_KEY);
 var fromMailId = "customerdelight@cakebee.in";
 var fromName = "CakeBee Remind";
 var remindWebsite = process.env.REMIND_WEBSITE || "www.remind.cakebee.in";
-var bccMailIds = ["abishek@cakebee.in"];
+var bccMailIds = ["abishek@cakebee.in", "kousik@logbase.io"];
 
 module.exports = {
-    notifyMemberBirthday : function(adminMail, memberName, accountId, zip) {
+    notifyMemberBirthday : function(adminMail, memberName, accountId, zip, teamName) {
 
         var cbeMessage = "";
         if (zip.toString().indexOf("641") == 0) {
@@ -24,7 +24,8 @@ module.exports = {
             text    :  'Hello!!!\n\n' +
                 'Today is ' + memberName + '’s birthday, don’t forget to wish!\n\n' +
                 cbeMessage +
-                'Your team page: ' + this.getTeamPage(accountId) + '\n\n' +
+                'Team name: ' + teamName + '\n\n' +
+                'Team page: ' + this.getTeamPage(accountId) + '\n\n' +
                 'Love,\n\n' +
                 'CakeBee Remind.'
         };
@@ -35,7 +36,7 @@ module.exports = {
         });
     },
 
-    wishBirthday : function (adminMail, memberName, accountId) {
+    wishBirthday : function (adminMail, memberName, accountId, teamName) {
         var payload   = {
             to      : adminMail,
             bcc      : bccMailIds,
@@ -44,7 +45,8 @@ module.exports = {
             subject : 'Birthday Wishes from Team CakeBee Remind!',
             text    :  'Hello '+ memberName +'!\n\n' +
                 'Wishing you many more happy returns on your birthday, have a good one!\n\n' +
-                'Your team page: ' + this.getTeamPage(accountId) + '\n\n' +
+                'Team name: ' + teamName + '\n\n' +
+                'Team page: ' + this.getTeamPage(accountId) + '\n\n' +
                 'Love,\n\n' +
                 'CakeBee Remind.'
         };
@@ -67,8 +69,8 @@ module.exports = {
                 'teams at work. Share the team page link with your team to add birthdays. ' +
                 'That’s it, now we’ll make sure you don’t miss to celebrate :)\n\n' +
                 'Any help, shoot an email to customerdelight@cakebee.in, we’ll be glad to help!\n\n' +
-                'Your team name:' + teamName + '\n\n' +
-                'Your team page: ' + this.getTeamPage(account) + '\n\n' +
+                'Team name: ' + teamName + '\n\n' +
+                'Team page: ' + this.getTeamPage(account) + '\n\n' +
                 'Love,\n\n' +
                 'CakeBee Remind.'
         };
@@ -122,6 +124,5 @@ module.exports = {
             if (err) { console.error(err); }
             console.log(json);
         });
-    },
-
+    }
 };
