@@ -55,7 +55,7 @@ module.exports = {
         });
     },
 
-    newUserNotification : function(account, email) {
+    newUserNotification : function(account, email, teamName) {
         var payload   = {
             to      : email,
             bcc      : bccMailIds,
@@ -67,6 +67,7 @@ module.exports = {
                 'teams at work. Share the team page link with your team to add birthdays. ' +
                 'That’s it, now we’ll make sure you don’t miss to celebrate :)\n\n' +
                 'Any help, shoot an email to customerdelight@cakebee.in, we’ll be glad to help!\n\n' +
+                'Your team name:' + teamName + '\n\n' +
                 'Your team page: ' + this.getTeamPage(account) + '\n\n' +
                 'Love,\n\n' +
                 'CakeBee Remind.'

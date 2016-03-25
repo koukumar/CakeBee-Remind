@@ -63,7 +63,7 @@ router.get('/forgotkey/:email', function(req, res) {
 
 });
 
-router.get('/:account/:email', function(req, res) {
+router.get('/:account/:email/:team', function(req, res) {
     if (req.headers['secret'] != secret) {
         res.status(400).send("Bad credentials");
         return;
@@ -71,8 +71,9 @@ router.get('/:account/:email', function(req, res) {
 
     var account = req.params.account;
     var email = req.params.email;
-    mail.newUserNotification(account, email);
-    client.log({ "account" : account, "email" : email}, ["new user"]);
+    var teamName = req.params.team;
+    mail.newUserNotification(account, email, teamName);
+    client.log({ "account" : account, "email" : email, "name" : teamName}, ["new user"]);
     res.status(200).send("New user registered.");
     return;
 });
